@@ -418,7 +418,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <h2><i class="fas fa-user-plus"></i> <span id="modal-title">新增用户</span></h2>
-                            <span class="close">&times;</span>
+                            <button type="button" class="close">&times;</button>
                         </div>
                         <form id="user-form">
                             <div class="form-group">
@@ -426,6 +426,24 @@
                                     <i class="fas fa-user"></i> 用户名
                                 </label>
                                 <input type="text" id="user-username" name="username" required placeholder="请输入用户名">
+                            </div>
+                            <div class="form-group">
+                                <label for="user-realname">
+                                    <i class="fas fa-id-card"></i> 真实姓名
+                                </label>
+                                <input type="text" id="user-realname" name="realname" required placeholder="请输入真实姓名">
+                            </div>
+                            <div class="form-group">
+                                <label for="user-phone">
+                                    <i class="fas fa-phone"></i> 手机号码
+                                </label>
+                                <input type="tel" id="user-phone" name="phone" required placeholder="请输入手机号码" pattern="[0-9]{11}">
+                            </div>
+                            <div class="form-group">
+                                <label for="user-email">
+                                    <i class="fas fa-envelope"></i> 电子邮箱
+                                </label>
+                                <input type="email" id="user-email" name="email" required placeholder="请输入电子邮箱">
                             </div>
                             <div class="form-group">
                                 <label for="user-password">
@@ -443,18 +461,40 @@
                                     <i class="fas fa-user-tag"></i> 角色
                                 </label>
                                 <select id="user-role" name="role" required>
+                                    <option value="">请选择角色</option>
                                     <option value="user">普通用户</option>
                                     <option value="admin">管理员</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <label for="user-description">
-                                    <i class="fas fa-info-circle"></i> 描述
+                                <label for="user-department">
+                                    <i class="fas fa-building"></i> 所属部门
                                 </label>
-                                <input type="text" id="user-description" name="description" placeholder="请输入用户描述">
+                                <select id="user-department" name="department" required>
+                                    <option value="">请选择部门</option>
+                                    <option value="dev">开发部</option>
+                                    <option value="ops">运维部</option>
+                                    <option value="qa">测试部</option>
+                                    <option value="pm">项目管理部</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-status">
+                                    <i class="fas fa-toggle-on"></i> 状态
+                                </label>
+                                <select id="user-status" name="status" required>
+                                    <option value="active">启用</option>
+                                    <option value="inactive">禁用</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-description">
+                                    <i class="fas fa-info-circle"></i> 备注说明
+                                </label>
+                                <textarea id="user-description" name="description" placeholder="请输入备注说明" rows="3"></textarea>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" id="cancel-user">
+                                <button type="button" class="btn btn-secondary" id="cancel-user" data-action="cancel">
                                     <i class="fas fa-times"></i> 取消
                                 </button>
                                 <button type="submit" class="btn btn-primary">
@@ -630,42 +670,68 @@
                 <div id="add-playbook-modal" class="modal">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h2><i class="fas fa-plus-circle"></i> 新建剧本</h2>
-                            <span class="close">&times;</span>
+                            <h2>新建剧本</h2>
+                            <button class="close">&times;</button>
                         </div>
-                        <form id="add-playbook-form">
-                            <div class="form-group">
-                                <label>
-                                    <i class="fas fa-file-code"></i> 剧本名称
-                                </label>
-                                <input type="text" required placeholder="请输入剧本名称">
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <i class="fas fa-info-circle"></i> 描述
-                                </label>
-                                <input type="text" placeholder="请输入剧本描述">
-                            </div>
-                            <div class="form-group">
-                                <label>
-                                    <i class="fas fa-layer-group"></i> 模板
-                                </label>
-                                <select>
-                                    <option value="">空白剧本</option>
-                                    <option value="nginx">Nginx安装配置</option>
-                                    <option value="mysql">MySQL部署</option>
-                                    <option value="docker">Docker安装</option>
-                                </select>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" id="cancel-add-playbook">
-                                    <i class="fas fa-times"></i> 取消
-                                </button>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fas fa-check"></i> 创建
-                                </button>
-                            </div>
-                        </form>
+                        <div class="modal-body">
+                            <form id="add-playbook-form">
+                                <div class="form-group">
+                                    <label for="playbook-name">剧本名称</label>
+                                    <input type="text" id="playbook-name" name="name" required placeholder="请输入剧本名称">
+                                </div>
+                                <div class="form-group">
+                                    <label for="playbook-description">剧本描述</label>
+                                    <textarea id="playbook-description" name="description" rows="3" placeholder="请输入剧本描述"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label for="playbook-category">剧本分类</label>
+                                    <select id="playbook-category" name="category" required>
+                                        <option value="">请选择分类</option>
+                                        <option value="system">系统管理</option>
+                                        <option value="deployment">部署管理</option>
+                                        <option value="monitoring">监控管理</option>
+                                        <option value="backup">备份管理</option>
+                                        <option value="security">安全管理</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="playbook-tags">标签</label>
+                                    <input type="text" id="playbook-tags" name="tags" placeholder="使用逗号分隔多个标签">
+                                </div>
+                                <div class="form-group">
+                                    <label>权限设置</label>
+                                    <div class="checkbox-group">
+                                        <label>
+                                            <input type="checkbox" name="permissions" value="read"> 可读
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="permissions" value="write"> 可写
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="permissions" value="execute"> 可执行
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label>高级选项</label>
+                                    <div class="checkbox-group">
+                                        <label>
+                                            <input type="checkbox" name="options" value="backup"> 执行前备份
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="options" value="rollback"> 失败时回滚
+                                        </label>
+                                        <label>
+                                            <input type="checkbox" name="options" value="notify"> 执行结果通知
+                                        </label>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" id="cancel-add-playbook">取消</button>
+                            <button type="button" class="btn btn-primary" id="create-playbook">创建</button>
+                        </div>
                     </div>
                 </div>
 
@@ -760,7 +826,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2><i class="fas fa-plus-circle"></i> 新增主机</h2>
-                <span class="close">&times;</span>
+                <button type="button" class="close">&times;</button>
             </div>
             <form id="add-host-form">
                 <div class="form-group">
@@ -811,6 +877,9 @@
         </div>
     </div>
 
-    <script src="../static/JS/index.js"></script>
+    <!-- 引入JavaScript文件 -->
+    <script type="module" src="../static/JS/core/utils.js"></script>
+    <script type="module" src="../static/JS/modules/users.js"></script>
+    <script type="module" src="../static/JS/index.js"></script>
 </body>
 </html>

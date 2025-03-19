@@ -415,7 +415,7 @@ body {
     background-color: #c0392b;
 }
 
-/* 弹窗样式 */
+/* 弹窗样式优化 */
 .modal {
     display: none;
     position: fixed;
@@ -424,81 +424,146 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    z-index: 1100;
+    z-index: 1000;
+    overflow-y: auto;
 }
 
 .modal-content {
     position: relative;
     background-color: #fff;
-    margin: 80px auto;
-    width: 90%;
-    max-width: 500px;
+    margin: 2% auto;
+    max-width: 600px;
+    max-height: 90vh;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    display: flex;
+    flex-direction: column;
 }
 
 .modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid #e1e1e1;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #eee;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    position: sticky;
+    top: 0;
+    background: #fff;
+    border-radius: 8px 8px 0 0;
+    z-index: 1;
 }
 
 .modal-header h2 {
     margin: 0;
-    font-size: 1.2rem;
+    font-size: 1.25rem;
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 
-.close {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #95a5a6;
-    transition: color 0.3s;
+.modal form {
+    padding: 1.5rem;
+    overflow-y: auto;
+    max-height: calc(90vh - 130px);
 }
 
-.close:hover {
-    color: #7f8c8d;
-}
-
-/* 表单样式 */
 .form-group {
-    margin: 1.5rem;
+    margin-bottom: 1rem;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    align-items: start;
 }
 
 .form-group label {
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
     font-weight: 500;
+    color: #333;
 }
 
 .form-group input,
-.form-group select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #e1e1e1;
+.form-group select,
+.form-group textarea {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
     border-radius: 4px;
-    font-size: 1em;
-    transition: border-color 0.3s;
+    width: 100%;
+    font-size: 0.9rem;
 }
 
-.form-group input:focus,
-.form-group select:focus {
-    outline: none;
-    border-color: #00b894;
+.form-group textarea {
+    height: 80px;
+    resize: vertical;
 }
 
 .modal-footer {
-    padding: 1.5rem;
-    border-top: 1px solid #e1e1e1;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid #eee;
     display: flex;
     justify-content: flex-end;
     gap: 1rem;
+    position: sticky;
+    bottom: 0;
+    background: #fff;
+    border-radius: 0 0 8px 8px;
+}
+
+/* 密码输入框组样式 */
+.password-input {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input input {
+    padding-right: 2.5rem;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 0.5rem;
+    background: none;
+    border: none;
+    color: #666;
+    cursor: pointer;
+    padding: 0.25rem;
+}
+
+.toggle-password:hover {
+    color: #333;
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+
+    .form-group {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* 滚动条美化 */
+.modal form::-webkit-scrollbar {
+    width: 8px;
+}
+
+.modal form::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+.modal form::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 4px;
+}
+
+.modal form::-webkit-scrollbar-thumb:hover {
+    background: #666;
 }
 
 /* 响应式设计 */
@@ -951,7 +1016,7 @@ body {
     .users-grid {
         grid-template-columns: 1fr;
     }
-
+    
     .user-stats {
         grid-template-columns: 1fr;
     }
@@ -1317,5 +1382,189 @@ body {
     
     .input-with-unit input {
         width: 100% !important;
+    }
+}
+
+/* 关闭按钮样式优化 */
+.modal-header .close {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    border: none;
+    background: #f1f2f6;
+    color: #2d3436;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    margin: -8px;
+}
+
+.modal-header .close:hover {
+    background: #e74c3c;
+    color: white;
+    transform: rotate(90deg);
+}
+
+.modal-header .close:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(231, 76, 60, 0.2);
+}
+
+/* 关闭按钮图标样式 */
+.modal-header .close i {
+    font-size: 16px;
+    line-height: 1;
+}
+
+/* 新建剧本模态框样式 */
+#add-playbook-modal .modal-content {
+    max-width: 600px;
+    background: linear-gradient(to bottom, #ffffff, #f8f9fa);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+#add-playbook-modal .modal-header {
+    background: linear-gradient(135deg, #4a90e2, #357abd);
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px 8px 0 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#add-playbook-modal .modal-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+#add-playbook-modal .modal-body {
+    padding: 20px;
+}
+
+#add-playbook-modal .form-group {
+    margin-bottom: 20px;
+}
+
+#add-playbook-modal label {
+    display: block;
+    margin-bottom: 8px;
+    color: #2d3436;
+    font-weight: 500;
+}
+
+#add-playbook-modal input[type="text"],
+#add-playbook-modal textarea,
+#add-playbook-modal select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #dfe6e9;
+    border-radius: 4px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+#add-playbook-modal input[type="text"]:focus,
+#add-playbook-modal textarea:focus,
+#add-playbook-modal select:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+#add-playbook-modal .checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+    margin-top: 8px;
+}
+
+#add-playbook-modal .checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: normal;
+    cursor: pointer;
+}
+
+#add-playbook-modal .checkbox-group input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+#add-playbook-modal .modal-footer {
+    padding: 15px 20px;
+    background: #f8f9fa;
+    border-top: 1px solid #dfe6e9;
+    border-radius: 0 0 8px 8px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+#add-playbook-modal .btn {
+    padding: 8px 20px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#add-playbook-modal .btn-secondary {
+    background: #dfe6e9;
+    color: #2d3436;
+    border: none;
+}
+
+#add-playbook-modal .btn-secondary:hover {
+    background: #b2bec3;
+}
+
+#add-playbook-modal .btn-primary {
+    background: #4a90e2;
+    color: white;
+    border: none;
+}
+
+#add-playbook-modal .btn-primary:hover {
+    background: #357abd;
+}
+
+#add-playbook-modal .close {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: background-color 0.3s ease;
+}
+
+#add-playbook-modal .close:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    #add-playbook-modal .modal-content {
+        margin: 20px;
+        max-width: none;
+    }
+    
+    #add-playbook-modal .checkbox-group {
+        grid-template-columns: 1fr;
     }
 } 

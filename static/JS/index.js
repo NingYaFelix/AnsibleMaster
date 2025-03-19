@@ -1,64 +1,125 @@
+import { $, $$, showNotification } from './core/utils.js';
+
 // 侧边栏拖拽调整大小功能
-const resizer = document.getElementById('resizer');
-const sidebar = document.getElementById('sidebar');
-const mainContent = document.getElementById('main-content');
-let isResizing = false;
-let startX;
-let startWidth;
+class Resizer {
+    constructor() {
+        this.resizer = $('#resizer');
+        this.sidebar = $('#sidebar');
+        this.mainContent = $('#main-content');
+        this.isResizing = false;
+        this.startX = 0;
+        this.startWidth = 0;
+        
+        this.setupEventListeners();
+    }
 
-resizer.addEventListener('mousedown', (e) => {
-    isResizing = true;
-    startX = e.clientX;
-    startWidth = sidebar.offsetWidth;
-    
-    document.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseup', () => {
-        isResizing = false;
-        document.removeEventListener('mousemove', handleMouseMove);
-    });
-});
+    setupEventListeners() {
+        this.resizer.addEventListener('mousedown', (e) => this.startResizing(e));
+        document.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+        document.addEventListener('mouseup', () => this.stopResizing());
+    }
 
-function handleMouseMove(e) {
-    if (!isResizing) return;
-    
-    const width = startWidth + (e.clientX - startX);
-    const minWidth = 200; // 最小宽度
-    const maxWidth = window.innerWidth * 0.4; // 最大宽度（40%的窗口宽度）
-    
-    if (width >= minWidth && width <= maxWidth) {
-        sidebar.style.width = `${width}px`;
-        mainContent.style.marginLeft = `${width}px`;
+    startResizing(e) {
+        this.isResizing = true;
+        this.startX = e.clientX;
+        this.startWidth = this.sidebar.offsetWidth;
+    }
+
+    stopResizing() {
+        this.isResizing = false;
+    }
+
+    handleMouseMove(e) {
+        if (!this.isResizing) return;
+        
+        const width = this.startWidth + (e.clientX - this.startX);
+        const minWidth = 200;
+        const maxWidth = window.innerWidth * 0.4;
+        
+        if (width >= minWidth && width <= maxWidth) {
+            this.sidebar.style.width = `${width}px`;
+            this.mainContent.style.marginLeft = `${width}px`;
+        }
     }
 }
 
-// 导航切换
-document.querySelectorAll('.nav-item').forEach(item => {
-    item.addEventListener('click', () => {
+// 导航管理
+class Navigation {
+    constructor() {
+        console.log('Initializing Navigation');
+        this.navItems = $$('.nav-item');
+        console.log('Found nav items:', this.navItems.length);
+        this.setupEventListeners();
+    }
+
+    setupEventListeners() {
+        this.navItems.forEach(item => {
+            console.log('Setting up click listener for:', item.getAttribute('data-section'));
+            item.addEventListener('click', (e) => {
+                console.log('Nav item clicked:', item.getAttribute('data-section'));
+                this.handleNavClick(item);
+            });
+        });
+    }
+
+    handleNavClick(item) {
+        const sectionId = item.getAttribute('data-section');
+        console.log('Handling navigation to section:', sectionId);
+        
         // 移除所有活动状态
-        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-        document.querySelectorAll('.content-section, #users-section, #playbooks-section').forEach(section => {
+        this.navItems.forEach(i => i.classList.remove('active'));
+        
+        // 隐藏所有内容区域
+        const allSections = $$('.content-section');
+        console.log('Found content sections:', allSections.length);
+        allSections.forEach(section => {
             section.style.display = 'none';
+            console.log('Hiding section:', section.id);
         });
         
         // 添加新的活动状态
         item.classList.add('active');
-        const sectionId = item.getAttribute('data-section');
         
-        // 根据不同的section显示对应内容
+        // 显示选中的内容区域
+        let targetSection;
         if (sectionId === 'users') {
-            document.getElementById('users-section').style.display = 'block';
+            targetSection = $('#users-section');
         } else if (sectionId === 'playbooks') {
-            document.getElementById('playbooks-section').style.display = 'block';
+            targetSection = $('#playbooks-section');
         } else {
-            document.getElementById(sectionId).style.display = 'block';
+            targetSection = $('#' + sectionId);
         }
-    });
+        
+        if (targetSection) {
+            console.log('Showing section:', sectionId);
+            targetSection.style.display = 'block';
+        } else {
+            console.error('Target section not found:', sectionId);
+        }
+    }
+}
+
+// 初始化应用
+document.addEventListener('DOMContentLoaded', () => {
+    console.log('Initializing application');
+    
+    // 初始化侧边栏调整大小功能
+    const resizer = new Resizer();
+    
+    // 初始化导航
+    const navigation = new Navigation();
+    
+    // 设置默认显示的部分
+    const defaultSection = $('#dashboard');
+    if (defaultSection) {
+        defaultSection.style.display = 'block';
+    }
 });
 
 // 主机管理功能
 const modal = document.getElementById('add-host-modal');
 const addHostBtn = document.getElementById('add-host-btn');
-const closeBtn = document.querySelector('.close');
+const closeBtn = document.querySelector('#add-host-modal .close');
 const cancelBtn = document.getElementById('cancel-add-host');
 const addHostForm = document.getElementById('add-host-form');
 const hostList = document.getElementById('host-list');
@@ -105,9 +166,13 @@ function updateStats() {
     const offlineCount = hosts.filter(host => host.status === '离线').length;
     const totalCount = hosts.length;
 
-    document.getElementById('online-hosts-count').textContent = onlineCount;
-    document.getElementById('offline-hosts-count').textContent = offlineCount;
-    document.getElementById('total-hosts-count').textContent = totalCount;
+    const onlineElement = document.getElementById('online-hosts-count');
+    const offlineElement = document.getElementById('offline-hosts-count');
+    const totalElement = document.getElementById('total-hosts-count');
+
+    if (onlineElement) onlineElement.textContent = onlineCount;
+    if (offlineElement) offlineElement.textContent = offlineCount;
+    if (totalElement) totalElement.textContent = totalCount;
 }
 
 // 过滤和搜索主机
@@ -217,8 +282,18 @@ function closeModal() {
     addHostForm.reset();
 }
 
-closeBtn.addEventListener('click', closeModal);
-cancelBtn.addEventListener('click', closeModal);
+// 为关闭按钮添加点击事件监听器
+if (closeBtn) {
+    closeBtn.addEventListener('click', closeModal);
+} else {
+    console.error('关闭按钮未找到');
+}
+
+if (cancelBtn) {
+    cancelBtn.addEventListener('click', closeModal);
+} else {
+    console.error('取消按钮未找到');
+}
 
 // 点击弹窗外部关闭弹窗
 window.addEventListener('click', (e) => {
@@ -271,224 +346,12 @@ function updateHostResources() {
 // 定期更新主机资源使用情况
 setInterval(updateHostResources, 5000);
 
-// 用户管理功能
-const addUserBtn = document.getElementById('add-user-btn');
-const userModal = document.getElementById('user-modal');
-const userForm = document.getElementById('user-form');
-const cancelUserBtn = document.getElementById('cancel-user');
-const modalTitle = document.getElementById('modal-title');
-const currentUser = {
-    role: 'admin', // 示例：当前用户是管理员
-    username: 'Admin'
-};
-
-// 打开新增用户模态框
-addUserBtn?.addEventListener('click', () => {
-    modalTitle.textContent = '新增用户';
-    userForm.reset();
-    userModal.style.display = 'block';
-    
-    // 如果不是管理员，禁用角色选择
-    const roleSelect = document.getElementById('user-role');
-    if (currentUser.role !== 'admin') {
-        roleSelect.disabled = true;
-        roleSelect.value = 'user';
-    } else {
-        roleSelect.disabled = false;
-    }
-});
-
-// 关闭模态框
-const closeUserModal = () => {
-    userModal.style.display = 'none';
-};
-
-cancelUserBtn?.addEventListener('click', closeUserModal);
-userModal?.querySelector('.close')?.addEventListener('click', closeUserModal);
-
-// 点击模态框外部关闭
-window.addEventListener('click', (e) => {
-    if (e.target === userModal) {
-        closeUserModal();
-    }
-});
-
-// 处理用户表单提交
-userForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
-    const formData = new FormData(userForm);
-    const userData = Object.fromEntries(formData.entries());
-    
-    // 这里应该是实际的API调用
-    console.log('提交用户数据:', userData);
-    
-    // 模拟成功响应
-    showNotification('用户创建成功！', 'success');
-    closeUserModal();
-});
-
-// 编辑用户
-document.querySelectorAll('.btn-icon[title="编辑"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const userCard = e.target.closest('.user-card');
-        const isAdmin = userCard.querySelector('.user-role').classList.contains('admin');
-        
-        // 检查权限
-        if (currentUser.role !== 'admin' && 
-            userCard.querySelector('.user-info h3').textContent !== currentUser.username) {
-            showNotification('您没有权限编辑其他用户的信息！', 'error');
-            return;
-        }
-
-        modalTitle.textContent = '编辑用户';
-        userModal.style.display = 'block';
-
-        // 填充表单数据
-        document.getElementById('user-username').value = userCard.querySelector('.user-info h3').textContent;
-        document.getElementById('user-description').value = userCard.querySelector('.user-info p').textContent;
-        document.getElementById('user-role').value = isAdmin ? 'admin' : 'user';
-        
-        // 如果不是管理员，禁用角色选择
-        if (currentUser.role !== 'admin') {
-            document.getElementById('user-role').disabled = true;
-        }
-    });
-});
-
-// 删除用户
-document.querySelectorAll('.btn-icon[title="删除"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const userCard = e.target.closest('.user-card');
-        const username = userCard.querySelector('.user-info h3').textContent;
-        
-        // 检查权限
-        if (currentUser.role !== 'admin') {
-            showNotification('只有管理员可以删除用户！', 'error');
-            return;
-        }
-
-        if (confirm(`确定要删除用户 "${username}" 吗？`)) {
-            // 这里应该是实际的API调用
-            userCard.remove();
-            showNotification('用户删除成功！', 'success');
-        }
-    });
-});
-
-// 重置密码
-document.querySelectorAll('.btn-icon[title="重置密码"]').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        const userCard = e.target.closest('.user-card');
-        const username = userCard.querySelector('.user-info h3').textContent;
-        
-        // 检查权限
-        if (currentUser.role !== 'admin' && 
-            username !== currentUser.username) {
-            showNotification('您没有权限重置其他用户的密码！', 'error');
-            return;
-        }
-
-        if (confirm(`确定要重置用户 "${username}" 的密码吗？`)) {
-            // 这里应该是实际的API调用
-            showNotification('密码重置成功！新密码已发送至用户邮箱。', 'success');
-        }
-    });
-});
-
-// 显示通知消息
-function showNotification(message, type = 'info') {
-    // 创建通知元素
-    const notification = document.createElement('div');
-    notification.className = `notification ${type}`;
-    
-    // 设置图标
-    const icon = document.createElement('i');
-    icon.className = `fas fa-${type === 'success' ? 'check-circle' : 
-                         type === 'error' ? 'times-circle' : 
-                         'info-circle'}`;
-    
-    // 设置消息
-    const text = document.createElement('span');
-    text.textContent = message;
-    
-    // 组装通知
-    notification.appendChild(icon);
-    notification.appendChild(text);
-    
-    // 添加到页面
-    document.body.appendChild(notification);
-    
-    // 添加动画类
-    setTimeout(() => notification.classList.add('show'), 10);
-    
-    // 自动移除
-    setTimeout(() => {
-        notification.classList.remove('show');
-        setTimeout(() => notification.remove(), 300);
-    }, 3000);
-}
-
-// 添加通知样式
-const style = document.createElement('style');
-style.textContent = `
-    .notification {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        padding: 1rem 1.5rem;
-        border-radius: 8px;
-        background: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        transform: translateX(120%);
-        transition: transform 0.3s ease;
-        z-index: 1000;
-    }
-    
-    .notification.show {
-        transform: translateX(0);
-    }
-    
-    .notification.success {
-        border-left: 4px solid #2ecc71;
-    }
-    
-    .notification.error {
-        border-left: 4px solid #e74c3c;
-    }
-    
-    .notification.info {
-        border-left: 4px solid #3498db;
-    }
-    
-    .notification i {
-        font-size: 1.25rem;
-    }
-    
-    .notification.success i {
-        color: #2ecc71;
-    }
-    
-    .notification.error i {
-        color: #e74c3c;
-    }
-    
-    .notification.info i {
-        color: #3498db;
-    }
-`;
-document.head.appendChild(style);
-
 // 剧本编写功能
 const addPlaybookBtn = document.getElementById('add-playbook-btn');
-const playbackModal = document.getElementById('add-playbook-modal');
-const cancelPlaybookBtn = document.getElementById('cancel-add-playbook');
+const addPlaybookModal = document.getElementById('add-playbook-modal');
 const addPlaybookForm = document.getElementById('add-playbook-form');
-const editorTabs = document.querySelectorAll('.editor-tabs .tab');
-const tabContents = document.querySelectorAll('.tab-content');
+const cancelAddPlaybookBtn = document.getElementById('cancel-add-playbook');
+const createPlaybookBtn = document.getElementById('create-playbook');
 const playbackItems = document.querySelectorAll('.playbook-item');
 const savePlaybookBtn = document.getElementById('save-playbook');
 const previewPlaybookBtn = document.getElementById('preview-playbook');
@@ -502,40 +365,56 @@ const hostSelectContainer = document.getElementById('host-select-container');
 const targetGroupSelect = document.getElementById('target-group-select');
 const targetHostSelect = document.getElementById('target-host-select');
 
-// 处理新建剧本
+// 打开新建剧本弹窗
 addPlaybookBtn?.addEventListener('click', () => {
-    playbackModal.style.display = 'block';
+    addPlaybookModal.style.display = 'block';
 });
 
 // 关闭新建剧本弹窗
-const closePlaybookModal = () => {
-    playbackModal.style.display = 'none';
+const closeAddPlaybookModal = () => {
+    addPlaybookModal.style.display = 'none';
     addPlaybookForm?.reset();
 };
 
-cancelPlaybookBtn?.addEventListener('click', closePlaybookModal);
-playbackModal?.querySelector('.close')?.addEventListener('click', closePlaybookModal);
+// 为关闭按钮添加点击事件
+addPlaybookModal?.querySelector('.close')?.addEventListener('click', closeAddPlaybookModal);
+
+// 为取消按钮添加点击事件
+cancelAddPlaybookBtn?.addEventListener('click', closeAddPlaybookModal);
 
 // 点击弹窗外部关闭
 window.addEventListener('click', (e) => {
-    if (e.target === playbackModal) {
-        closePlaybookModal();
+    if (e.target === addPlaybookModal) {
+        closeAddPlaybookModal();
     }
 });
 
-// 处理剧本表单提交
-addPlaybookForm?.addEventListener('submit', (e) => {
-    e.preventDefault();
-    
+// 处理创建剧本
+createPlaybookBtn?.addEventListener('click', () => {
+    if (!addPlaybookForm?.checkValidity()) {
+        addPlaybookForm?.reportValidity();
+        return;
+    }
+
     const formData = new FormData(addPlaybookForm);
-    const playbookData = Object.fromEntries(formData.entries());
-    
-    // 这里应该是实际的API调用
-    console.log('提交剧本数据:', playbookData);
-    
+    const playbookData = {
+        name: formData.get('name'),
+        description: formData.get('description'),
+        category: formData.get('category'),
+        tags: formData.get('tags').split(',').map(tag => tag.trim()).filter(tag => tag),
+        permissions: Array.from(formData.getAll('permissions')),
+        options: Array.from(formData.getAll('options'))
+    };
+
+    // 这里应该调用后端 API 创建剧本
+    console.log('创建剧本:', playbookData);
+
     // 模拟成功响应
     showNotification('剧本创建成功！', 'success');
-    closePlaybookModal();
+    closeAddPlaybookModal();
+
+    // 刷新剧本列表
+    // TODO: 实现刷新剧本列表的逻辑
 });
 
 // 标签页切换
@@ -669,99 +548,46 @@ executeForm?.addEventListener('submit', async (e) => {
     // 添加日志条目
     const addLogEntry = (message, type = 'info') => {
         const logLine = document.createElement('div');
-        logLine.className = `log-line ${type}`;
-        logLine.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+        logLine.className = 'log-entry ' + type;
+        logLine.innerHTML = `
+            <span class="timestamp">${new Date().toLocaleTimeString()}</span>
+            <span class="message">${message}</span>
+        `;
         logContainer.appendChild(logLine);
         logContainer.scrollTop = logContainer.scrollHeight;
     };
+
+    // 模拟执行过程
+    closeExecuteModal();
     
     try {
-        // 这里应该是实际的API调用
-        addLogEntry(`开始执行剧本: ${playbookName}`);
-        addLogEntry(`目标: ${executionData['target-type'] === 'group' ? '主机组 - ' + executionData['target-group'] : '主机 - ' + executionData['target-host']}`);
+        // 这里应该是实际的执行API调用
+        console.log('执行剧本:', {
+            playbookName,
+            executionData
+        });
         
         // 模拟执行过程
-        await new Promise(resolve => setTimeout(resolve, 2000));
+        addLogEntry('开始执行剧本: ' + playbookName);
         addLogEntry('正在连接目标主机...', 'info');
         
-        await new Promise(resolve => setTimeout(resolve, 1500));
-        addLogEntry('连接成功，开始执行任务', 'success');
+        setTimeout(() => {
+            addLogEntry('连接成功，开始执行任务', 'success');
+            
+            setTimeout(() => {
+                addLogEntry('任务执行完成', 'success');
+                statusBadge.className = 'status-badge success';
+                statusBadge.innerHTML = '<i class="fas fa-check"></i> 执行成功';
+                
+                showNotification('剧本执行成功！', 'success');
+            }, 2000);
+        }, 1000);
         
-        await new Promise(resolve => setTimeout(resolve, 3000));
-        addLogEntry('任务执行完成', 'success');
-        
-        // 更新状态为成功
-        statusBadge.className = 'status-badge success';
-        statusBadge.innerHTML = '<i class="fas fa-check-circle"></i> 执行成功';
-        
-        showNotification('剧本执行成功！', 'success');
     } catch (error) {
-        // 处理错误
-        addLogEntry(`执行出错: ${error.message}`, 'error');
+        addLogEntry('执行出错: ' + error.message, 'error');
         statusBadge.className = 'status-badge error';
-        statusBadge.innerHTML = '<i class="fas fa-times-circle"></i> 执行失败';
+        statusBadge.innerHTML = '<i class="fas fa-times"></i> 执行失败';
         
         showNotification('剧本执行失败！', 'error');
     }
-    
-    closeExecuteModal();
 });
-
-// 加载剧本内容
-function loadPlaybookContent(fileName) {
-    // 这里应该是实际的API调用来获取剧本内容
-    const demoContent = {
-        'nginx_install.yml': `---
-- name: Install and Configure Nginx
-  hosts: web_servers
-  become: yes
-  
-  vars:
-    nginx_port: 80
-    server_name: example.com
-  
-  tasks:
-    - name: Install Nginx
-      apt:
-        name: nginx
-        state: present
-        update_cache: yes
-    
-    - name: Configure Nginx
-      template:
-        src: nginx.conf.j2
-        dest: /etc/nginx/nginx.conf
-      notify: restart nginx
-  
-  handlers:
-    - name: restart nginx
-      service:
-        name: nginx
-        state: restarted`,
-        'mysql_setup.yml': `---
-- name: Deploy MySQL Database
-  hosts: db_servers
-  become: yes
-  
-  vars:
-    mysql_root_password: "{{ vault_mysql_root_password }}"
-    mysql_version: "8.0"
-  
-  tasks:
-    - name: Install MySQL
-      apt:
-        name: mysql-server
-        state: present
-        update_cache: yes
-    
-    - name: Start MySQL Service
-      service:
-        name: mysql
-        state: started
-        enabled: yes`
-    };
-    
-    // 更新编辑器内容
-    const editor = document.querySelector('.code-editor code');
-    editor.textContent = demoContent[fileName] || '# 新建剧本\n';
-} 
