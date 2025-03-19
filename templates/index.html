@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ansible管理系统</title>
+    <link rel="stylesheet" href="../static/CSS/index.css">
+    <!-- Font Awesome图标 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- 顶部导航栏 -->
+        <header class="top-header">
+            <div class="logo">
+                <i class="fas fa-cogs"></i>
+                <span>Ansible管理系统</span>
+            </div>
+            <div class="header-actions">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="搜索...">
+                </div>
+                <div class="user-profile">
+                    <i class="fas fa-user-circle"></i>
+                    <span>管理员</span>
+                </div>
+            </div>
+        </header>
+
+        <div class="main-container">
+            <!-- 侧边栏 -->
+            <nav id="sidebar">
+                <div class="nav-menu">
+                    <div class="nav-item active" data-section="dashboard">
+                        <i class="fas fa-home"></i>
+                        <span>首页</span>
+                    </div>
+                    <div class="nav-item" data-section="hosts">
+                        <i class="fas fa-server"></i>
+                        <span>主机管理</span>
+                    </div>
+                    <div class="nav-item" data-section="users">
+                        <i class="fas fa-users"></i>
+                        <span>用户管理</span>
+                    </div>
+                    <div class="nav-item" data-section="playbooks">
+                        <i class="fas fa-code"></i>
+                        <span>剧本编写</span>
+                    </div>
+                </div>
+                <div id="resizer"></div>
+            </nav>
+
+            <!-- 主要内容区 -->
+            <main id="main-content">
+                <!-- 首页 -->
+                <div class="content-section" id="dashboard" style="display: block;">
+                    <div class="section-header">
+                        <h2>系统概览</h2>
+                    </div>
+                    <div class="dashboard-grid">
+                        <!-- 左侧主机统计 -->
+                        <div class="dashboard-stats">
+                            <div class="stat-group">
+                                <h3>主机状态</h3>
+                                <div class="stat-cards">
+                                    <div class="stat-card">
+                                        <div class="stat-icon total">
+                                            <i class="fas fa-server"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>总主机数</h3>
+                                            <p>24</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon online">
+                                            <i class="fas fa-check-circle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>在线主机</h3>
+                                            <p>18</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon offline">
+                                            <i class="fas fa-times-circle"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>离线主机</h3>
+                                            <p>6</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="stat-group">
+                                <h3>主机组分布</h3>
+                                <div class="stat-cards">
+                                    <div class="stat-card">
+                                        <div class="stat-icon group-web">
+                                            <i class="fas fa-globe"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>Web服务器</h3>
+                                            <p>8</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon group-db">
+                                            <i class="fas fa-database"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>数据库服务器</h3>
+                                            <p>6</p>
+                                        </div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-icon group-app">
+                                            <i class="fas fa-cube"></i>
+                                        </div>
+                                        <div class="stat-info">
+                                            <h3>应用服务器</h3>
+                                            <p>10</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- 右侧系统状态 -->
+                        <div class="system-status">
+                            <div class="status-card">
+                                <h3>系统资源使用情况</h3>
+                                <div class="resource-grid">
+                                    <div class="resource-item">
+                                        <div class="resource-header">
+                                            <i class="fas fa-microchip"></i>
+                                            <span>CPU使用率</span>
+                                        </div>
+                                        <div class="resource-chart">
+                                            <div class="progress-bar">
+                                                <div class="progress" style="width: 65%;">65%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="resource-item">
+                                        <div class="resource-header">
+                                            <i class="fas fa-memory"></i>
+                                            <span>内存使用率</span>
+                                        </div>
+                                        <div class="resource-chart">
+                                            <div class="progress-bar">
+                                                <div class="progress" style="width: 80%;">80%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="resource-item">
+                                        <div class="resource-header">
+                                            <i class="fas fa-hdd"></i>
+                                            <span>磁盘使用率</span>
+                                        </div>
+                                        <div class="resource-chart">
+                                            <div class="progress-bar">
+                                                <div class="progress" style="width: 45%;">45%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="resource-item">
+                                        <div class="resource-header">
+                                            <i class="fas fa-network-wired"></i>
+                                            <span>网络带宽</span>
+                                        </div>
+                                        <div class="resource-chart">
+                                            <div class="progress-bar">
+                                                <div class="progress" style="width: 30%;">30%</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 主机管理部分 -->
+                <div class="content-section" id="hosts" style="display: none;">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <h1><i class="fas fa-server"></i> 主机管理</h1>
+                            <div class="breadcrumb">
+                                <span>首页</span>
+                                <i class="fas fa-chevron-right"></i>
+                                <span>主机管理</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="add-host-btn">
+                                <i class="fas fa-plus"></i> 新增主机
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="table-container">
+                        <div class="table-header">
+                            <div class="table-title">主机列表</div>
+                            <div class="table-actions">
+                                <div class="table-filter">
+                                    <select id="group-filter">
+                                        <option value="">所有组</option>
+                                        <option value="web">Web服务器组</option>
+                                        <option value="db">数据库服务器组</option>
+                                        <option value="app">应用服务器组</option>
+                                    </select>
+                                </div>
+                                <div class="table-search">
+                                    <input type="text" placeholder="搜索主机...">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-scroll">
+                            <table class="host-table">
+                                <thead>
+                                    <tr>
+                                        <th>主机名</th>
+                                        <th>地址</th>
+                                        <th>用户名</th>
+                                        <th>状态</th>
+                                        <th>操作系统</th>
+                                        <th>所属组</th>
+                                        <th>CPU使用率</th>
+                                        <th>内存使用率</th>
+                                        <th>磁盘使用率</th>
+                                        <th>网络带宽</th>
+                                        <th>操作</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="host-list">
+                                    <!-- 示例数据 -->
+                                    <tr>
+                                        <td>web-server-1</td>
+                                        <td>192.168.1.100</td>
+                                        <td>admin</td>
+                                        <td>
+                                            <span class="status-badge status-online">
+                                                <i class="fas fa-check-circle"></i>
+                                                在线
+                                            </span>
+                                        </td>
+                                        <td>Ubuntu 20.04</td>
+                                        <td>
+                                            <span class="group-badge group-web">Web服务器组</span>
+                                        </td>
+                                        <td>
+                                            <div class="resource-mini">
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 45%;">45%</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="resource-mini">
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 60%;">60%</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="resource-mini">
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 75%;">75%</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="resource-mini">
+                                                <div class="progress-bar">
+                                                    <div class="progress" style="width: 30%;">30%</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-danger btn-sm" onclick="deleteHost(1)">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 用户管理部分 -->
+                <div id="users-section" class="content-section" style="display: none;">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <h1><i class="fas fa-users"></i> 用户管理</h1>
+                            <div class="breadcrumb">
+                                <span>首页</span>
+                                <i class="fas fa-chevron-right"></i>
+                                <span>用户管理</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="add-user-btn">
+                                <i class="fas fa-user-plus"></i> 新增用户
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="users-container">
+                        <!-- 用户统计卡片 -->
+                        <div class="user-stats">
+                            <div class="stat-card">
+                                <div class="stat-icon admin">
+                                    <i class="fas fa-user-shield"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>管理员</h3>
+                                    <p>2</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon user">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>普通用户</h3>
+                                    <p>8</p>
+                                </div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon active">
+                                    <i class="fas fa-user-clock"></i>
+                                </div>
+                                <div class="stat-info">
+                                    <h3>在线用户</h3>
+                                    <p>5</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 用户列表 -->
+                        <div class="users-grid">
+                            <!-- 示例用户卡片 -->
+                            <div class="user-card admin-card">
+                                <div class="user-card-header">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user-shield"></i>
+                                        <span class="status-dot online"></span>
+                                    </div>
+                                    <div class="user-role admin">管理员</div>
+                                </div>
+                                <div class="user-info">
+                                    <h3>Admin</h3>
+                                    <p>系统管理员</p>
+                                </div>
+                                <div class="user-stats">
+                                    <div class="stat">
+                                        <i class="fas fa-clock"></i>
+                                        <span>上次登录: 10分钟前</span>
+                                    </div>
+                                    <div class="stat">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>创建于: 2024-03-20</span>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-icon" title="重置密码">
+                                        <i class="fas fa-key"></i>
+                                    </button>
+                                    <button class="btn btn-icon danger" title="删除">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="user-card">
+                                <div class="user-card-header">
+                                    <div class="user-avatar">
+                                        <i class="fas fa-user"></i>
+                                        <span class="status-dot online"></span>
+                                    </div>
+                                    <div class="user-role user">普通用户</div>
+                                </div>
+                                <div class="user-info">
+                                    <h3>张三</h3>
+                                    <p>运维工程师</p>
+                                </div>
+                                <div class="user-stats">
+                                    <div class="stat">
+                                        <i class="fas fa-clock"></i>
+                                        <span>上次登录: 1小时前</span>
+                                    </div>
+                                    <div class="stat">
+                                        <i class="fas fa-calendar-alt"></i>
+                                        <span>创建于: 2024-03-15</span>
+                                    </div>
+                                </div>
+                                <div class="user-actions">
+                                    <button class="btn btn-icon" title="编辑">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 新增/编辑用户弹窗 -->
+                <div id="user-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2><i class="fas fa-user-plus"></i> <span id="modal-title">新增用户</span></h2>
+                            <span class="close">&times;</span>
+                        </div>
+                        <form id="user-form">
+                            <div class="form-group">
+                                <label for="user-username">
+                                    <i class="fas fa-user"></i> 用户名
+                                </label>
+                                <input type="text" id="user-username" name="username" required placeholder="请输入用户名">
+                            </div>
+                            <div class="form-group">
+                                <label for="user-password">
+                                    <i class="fas fa-lock"></i> 密码
+                                </label>
+                                <div class="password-input">
+                                    <input type="password" id="user-password" name="password" required placeholder="请输入密码">
+                                    <button type="button" class="toggle-password">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-role">
+                                    <i class="fas fa-user-tag"></i> 角色
+                                </label>
+                                <select id="user-role" name="role" required>
+                                    <option value="user">普通用户</option>
+                                    <option value="admin">管理员</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="user-description">
+                                    <i class="fas fa-info-circle"></i> 描述
+                                </label>
+                                <input type="text" id="user-description" name="description" placeholder="请输入用户描述">
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="cancel-user">
+                                    <i class="fas fa-times"></i> 取消
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> 确定
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 剧本编写部分 -->
+                <div id="playbooks-section" class="content-section" style="display: none;">
+                    <div class="section-header">
+                        <div class="header-left">
+                            <h1><i class="fas fa-code"></i> 剧本编写</h1>
+                            <div class="breadcrumb">
+                                <span>首页</span>
+                                <i class="fas fa-chevron-right"></i>
+                                <span>剧本编写</span>
+                            </div>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="add-playbook-btn">
+                                <i class="fas fa-plus"></i> 新建剧本
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="playbooks-container">
+                        <!-- 左侧剧本列表 -->
+                        <div class="playbooks-list">
+                            <div class="list-header">
+                                <h3>剧本列表</h3>
+                                <div class="list-search">
+                                    <input type="text" placeholder="搜索剧本...">
+                                    <i class="fas fa-search"></i>
+                                </div>
+                            </div>
+                            <div class="playbook-items">
+                                <div class="playbook-item active">
+                                    <div class="item-icon"><i class="fas fa-file-code"></i></div>
+                                    <div class="item-info">
+                                        <h4>nginx_install.yml</h4>
+                                        <span>安装配置Nginx服务器</span>
+                                    </div>
+                                </div>
+                                <div class="playbook-item">
+                                    <div class="item-icon"><i class="fas fa-file-code"></i></div>
+                                    <div class="item-info">
+                                        <h4>mysql_setup.yml</h4>
+                                        <span>MySQL数据库部署</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 右侧编辑区域 -->
+                        <div class="playbook-editor">
+                            <div class="editor-header">
+                                <div class="file-info">
+                                    <h3>nginx_install.yml</h3>
+                                    <span class="file-path">/playbooks/nginx_install.yml</span>
+                                </div>
+                                <div class="editor-actions">
+                                    <button class="btn btn-secondary" id="preview-playbook">
+                                        <i class="fas fa-eye"></i> 预览
+                                    </button>
+                                    <button class="btn btn-primary" id="execute-playbook">
+                                        <i class="fas fa-play"></i> 执行
+                                    </button>
+                                    <button class="btn btn-primary" id="save-playbook">
+                                        <i class="fas fa-save"></i> 保存
+                                    </button>
+                                </div>
+                            </div>
+                            
+                            <div class="editor-container">
+                                <div class="editor-tabs">
+                                    <div class="tab active" data-tab="editor">
+                                        <i class="fas fa-code"></i> 编辑器
+                                    </div>
+                                    <div class="tab" data-tab="params">
+                                        <i class="fas fa-sliders-h"></i> 参数配置
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-content" id="editor-tab" style="display: block;">
+                                    <div class="code-editor">
+                                        <pre><code>---
+- name: Install and Configure Nginx
+  hosts: web_servers
+  become: yes
+  
+  vars:
+    nginx_port: 80
+    server_name: example.com
+  
+  tasks:
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+        update_cache: yes
+    
+    - name: Configure Nginx
+      template:
+        src: nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+      notify: restart nginx
+  
+  handlers:
+    - name: restart nginx
+      service:
+        name: nginx
+        state: restarted</code></pre>
+                                    </div>
+                                </div>
+                                
+                                <div class="tab-content" id="params-tab" style="display: none;">
+                                    <div class="params-form">
+                                        <div class="param-group">
+                                            <h4>基本配置</h4>
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-server"></i>
+                                                    目标主机组
+                                                </label>
+                                                <select>
+                                                    <option value="web_servers">Web服务器组</option>
+                                                    <option value="db_servers">数据库服务器组</option>
+                                                    <option value="all">所有主机</option>
+                                                </select>
+                                            </div>
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-user-shield"></i>
+                                                    权限提升
+                                                </label>
+                                                <div class="switch-field">
+                                                    <input type="radio" id="become-yes" name="become" value="yes" checked>
+                                                    <label for="become-yes">是</label>
+                                                    <input type="radio" id="become-no" name="become" value="no">
+                                                    <label for="become-no">否</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="param-group">
+                                            <h4>变量配置</h4>
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-plug"></i>
+                                                    Nginx端口
+                                                </label>
+                                                <input type="number" value="80" min="1" max="65535">
+                                            </div>
+                                            <div class="form-group">
+                                                <label>
+                                                    <i class="fas fa-globe"></i>
+                                                    服务器域名
+                                                </label>
+                                                <input type="text" value="example.com">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 新建剧本弹窗 -->
+                <div id="add-playbook-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2><i class="fas fa-plus-circle"></i> 新建剧本</h2>
+                            <span class="close">&times;</span>
+                        </div>
+                        <form id="add-playbook-form">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-file-code"></i> 剧本名称
+                                </label>
+                                <input type="text" required placeholder="请输入剧本名称">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-info-circle"></i> 描述
+                                </label>
+                                <input type="text" placeholder="请输入剧本描述">
+                            </div>
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-layer-group"></i> 模板
+                                </label>
+                                <select>
+                                    <option value="">空白剧本</option>
+                                    <option value="nginx">Nginx安装配置</option>
+                                    <option value="mysql">MySQL部署</option>
+                                    <option value="docker">Docker安装</option>
+                                </select>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="cancel-add-playbook">
+                                    <i class="fas fa-times"></i> 取消
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-check"></i> 创建
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 添加执行剧本弹窗 -->
+                <div id="execute-playbook-modal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2><i class="fas fa-play-circle"></i> 执行剧本</h2>
+                            <span class="close">&times;</span>
+                        </div>
+                        <form id="execute-playbook-form">
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-crosshairs"></i> 执行目标
+                                </label>
+                                <div class="switch-field">
+                                    <input type="radio" id="target-group" name="target-type" value="group" checked>
+                                    <label for="target-group">主机组</label>
+                                    <input type="radio" id="target-host" name="target-type" value="host">
+                                    <label for="target-host">单个主机</label>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group" id="group-select-container">
+                                <label>
+                                    <i class="fas fa-layer-group"></i> 选择主机组
+                                </label>
+                                <select id="target-group-select" name="target-group" required>
+                                    <option value="">请选择主机组</option>
+                                    <option value="web">Web服务器组</option>
+                                    <option value="db">数据库服务器组</option>
+                                    <option value="app">应用服务器组</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group" id="host-select-container" style="display: none;">
+                                <label>
+                                    <i class="fas fa-server"></i> 选择主机
+                                </label>
+                                <select id="target-host-select" name="target-host" required disabled>
+                                    <option value="">请选择主机</option>
+                                    <option value="web-server-1">web-server-1 (192.168.1.100)</option>
+                                    <option value="db-server-1">db-server-1 (192.168.1.101)</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-user-shield"></i> 执行用户
+                                </label>
+                                <input type="text" name="execute-user" required placeholder="请输入执行用户">
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-key"></i> SSH密钥
+                                </label>
+                                <select name="ssh-key" required>
+                                    <option value="">请选择SSH密钥</option>
+                                    <option value="default">默认密钥</option>
+                                    <option value="custom">自定义密钥</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-clock"></i> 超时时间
+                                </label>
+                                <div class="input-with-unit">
+                                    <input type="number" name="timeout" value="300" min="60" max="3600">
+                                    <span class="unit">秒</span>
+                                </div>
+                            </div>
+
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" id="cancel-execute">
+                                    <i class="fas fa-times"></i> 取消
+                                </button>
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-play"></i> 开始执行
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- 新增主机弹窗 -->
+    <div id="add-host-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-plus-circle"></i> 新增主机</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="add-host-form">
+                <div class="form-group">
+                    <label for="hostname">
+                        <i class="fas fa-server"></i> 主机名
+                    </label>
+                    <input type="text" id="hostname" name="hostname" required placeholder="请输入主机名">
+                </div>
+                <div class="form-group">
+                    <label for="address">
+                        <i class="fas fa-network-wired"></i> 地址
+                    </label>
+                    <input type="text" id="address" name="address" required placeholder="请输入IP地址">
+                </div>
+                <div class="form-group">
+                    <label for="username">
+                        <i class="fas fa-user"></i> 用户名
+                    </label>
+                    <input type="text" id="username" name="username" required placeholder="请输入用户名">
+                </div>
+                <div class="form-group">
+                    <label for="password">
+                        <i class="fas fa-lock"></i> 密码
+                    </label>
+                    <input type="password" id="password" name="password" required placeholder="请输入密码">
+                </div>
+                <div class="form-group">
+                    <label for="group">
+                        <i class="fas fa-layer-group"></i> 所属组
+                    </label>
+                    <select id="group" name="group" required>
+                        <option value="">请选择组</option>
+                        <option value="web">Web服务器组</option>
+                        <option value="db">数据库服务器组</option>
+                        <option value="app">应用服务器组</option>
+                        <option value="other">其他</option>
+                    </select>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="cancel-add-host">
+                        <i class="fas fa-times"></i> 取消
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-check"></i> 确定
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../static/JS/index.js"></script>
+</body>
+</html>
