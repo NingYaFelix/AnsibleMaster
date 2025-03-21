@@ -40,7 +40,9 @@
                         <input type="checkbox" id="remember" name="remember">
                         <span class="checkbox-text">记住我</span>
                     </label>
-                    <a href="forgot-password.html" class="forgot-password">忘记密码？</a>
+                    <!-- <a href="forgot-password.html" class="forgot-password">忘记密码？</a> -->
+                     <!--修改为Django模板-->
+                     <a href="{% url 'ForgotPassword' %}" class="forgot-password">忘记密码？</a>
                 </div>
                 <div class="form-group">
                     <button type="submit" class="login-btn">
