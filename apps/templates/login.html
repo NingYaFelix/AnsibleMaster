@@ -1,6 +1,5 @@
-{% load static %}
-
 <!DOCTYPE html>
+{% load static %}
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
@@ -19,7 +18,7 @@
                 <p>请登录以继续操作</p>
             </div>
             <!-- django登录表单 -->
-            <form method="post" action="{% url 'login.html' %}" id="login-form" class="login-form">
+            <form method="post" action="{% url 'login' %}" id="login-form" class="login-form">
                 {% csrf_token %}
                 <!-- 错误信息提示 -->
                  {% if form.error %}
@@ -73,4 +72,4 @@
     <!-- <script src="../static/JS/login.js"></script> -->
     <script src="{% static 'JS/login.cs' %}"></script>
 </body>
-</html> 
+</html>
