@@ -1,0 +1,41 @@
+.form-group select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.status-container {
+    margin-top: 15px;
+    display: none;
+}
+
+.status-container.show {
+    display: block;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    margin: 8px 0;
+    color: #666;
+}
+
+.status-item i {
+    margin-right: 8px;
+}
+
+.status-success {
+    color: #2ecc71;
+}
+
+.error-message {
+    color: #e74c3c;
+    margin-top: 10px;
+    display: none;
+}
+
+.error-message.show {
+    display: block;
+}

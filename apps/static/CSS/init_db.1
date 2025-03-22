@@ -1,0 +1,233 @@
+/* 初始化数据库页面样式 */
+.login-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+}
+
+.login-box {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 15px;
+    padding: 40px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.login-header i {
+    font-size: 48px;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.login-header h1 {
+    color: #fff;
+    font-size: 24px;
+    margin: 0 0 10px;
+}
+
+.login-header p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.form-group label i {
+    margin-right: 8px;
+    width: 20px;
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+    color: #fff;
+    font-size: 14px;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: #fff;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.form-group input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.password-input {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    padding: 5px;
+}
+
+.toggle-password:hover {
+    color: #fff;
+}
+
+.advanced-toggle {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.advanced-toggle:hover {
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.advanced-settings {
+    display: none;
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    margin-bottom: 20px;
+}
+
+.advanced-settings.show {
+    display: block;
+}
+
+.checkbox-group {
+    display: flex;
+    gap: 20px;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    cursor: pointer;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 8px;
+    width: 16px;
+    height: 16px;
+}
+
+.status-container {
+    margin: 20px 0;
+    display: none;
+}
+
+.status-container.show {
+    display: block;
+}
+
+.status-item {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    margin: 10px 0;
+    padding: 8px;
+    border-radius: 5px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.status-item i {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.status-success {
+    color: #2ecc71;
+}
+
+.login-btn {
+    width: 100%;
+    padding: 12px;
+    background: #fff;
+    border: none;
+    border-radius: 5px;
+    color: #2a5298;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.login-btn:hover {
+    background: rgba(255, 255, 255, 0.9);
+    transform: translateY(-1px);
+}
+
+.login-btn:disabled {
+    background: rgba(255, 255, 255, 0.5);
+    cursor: not-allowed;
+}
+
+.error-message {
+    display: none;
+    padding: 10px;
+    background: rgba(231, 76, 60, 0.2);
+    border: 1px solid rgba(231, 76, 60, 0.3);
+    border-radius: 5px;
+    color: #fff;
+    margin-bottom: 15px;
+}
+
+.error-message.show {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+@media (max-width: 768px) {
+    .login-box {
+        margin: 20px;
+        padding: 30px;
+    }
+
+    .checkbox-group {
+        flex-direction: column;
+        gap: 10px;
+    }
+} 
