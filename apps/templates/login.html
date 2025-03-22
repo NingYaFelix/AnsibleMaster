@@ -1,10 +1,13 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>登录 - Ansible管理系统</title>
-    <link rel="stylesheet" href="../static/CSS/login.css">
+    <!-- <link rel="stylesheet" href="../static/CSS/login.css"> -->
+     <link rel="stylesheet" href="{% static 'CSS/login.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
@@ -15,14 +18,26 @@
                 <h1>Ansible管理系统</h1>
                 <p>请登录以继续操作</p>
             </div>
-            <form id="login-form" class="login-form">
+            <!-- django登录表单 -->
+            <form method="post" action="{% url 'login.html' %}" id="login-form" class="login-form">
+                {% csrf_token %}
+                <!-- 错误信息提示 -->
+                 {% if form.error %}
+                 <div class="alert alert-danger">
+                    {% for error in form.non_field_errors %}
+                        {{ error }}
+                    {% endfor %}
+                </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="username">
                         <i class="fas fa-user"></i>
                         <span>用户名</span>
                     </label>
-                    <input type="text" id="username" name="username" required placeholder="请输入用户名">
+                    <input type="text" id="username" name="username" required placeholder="请输入用户名" value="{{form.username.value|default:''}}">
                 </div>
+
                 <div class="form-group">
                     <label for="password">
                         <i class="fas fa-lock"></i>
@@ -44,6 +59,8 @@
                      <!--修改为Django模板-->
                      <a href="{% url 'ForgotPassword' %}" class="forgot-password">忘记密码？</a>
                 </div>
+                <input type="hidden" name="next" value="{{ next }}">
+
                 <div class="form-group">
                     <button type="submit" class="login-btn">
                         <i class="fas fa-sign-in-alt"></i>
@@ -53,6 +70,7 @@
             </form>
         </div>
     </div>
-    <script src="../static/JS/login.js"></script>
+    <!-- <script src="../static/JS/login.js"></script> -->
+    <script src="{% static 'JS/login.cs' %}"></script>
 </body>
 </html> 
